@@ -1,0 +1,315 @@
+import React, { useEffect, useState, useRef } from 'react'
+import * as S from './ModalAdv.style'
+import { ModalSVG } from './ModalSVG'
+import {
+  // useAddImgMutation,
+  useDeleteImgMutation,
+  useUpdateAdvMutation,
+} from '../../redux/reducers/adsApi'
+import { getToken } from '../../scripts/tools'
+import { useParams } from 'react-router-dom'
+import { useGetAdvQuery } from '../../redux/reducers/adsApi'
+import { useAuthMutations } from '../../scripts/hooks/useAuthMutations'
+
+export const ModalAdv = ({ modal, setModal, role }) => {
+  const token = getToken()
+  const advId = useParams().id
+  const inputRef = useRef(0)
+
+  // const {addImg = useAddImgMutation()
+  const [updateAdv] = useUpdateAdvMutation()
+  const [deleteImg] = useDeleteImgMutation()
+  const { data } = useGetAdvQuery(advId)
+  const { addAdv, addImg } = useAuthMutations()
+
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [price, setPrice] = useState('')
+  const [disabled, setDisabled] = useState(true)
+  const [image, setImage] = useState([])
+  const [dataImg, setDataImg] = useState([])
+
+  const clickToexit = () => {
+    setModal('unvisible')
+    setTitle('')
+    setDescription('')
+    setPrice('')
+    setImage([])
+    setDataImg([])
+    inputRef.current.value = ''
+  }
+
+  const handleClickToAdd = (e) => {
+    e.preventDefault()
+    const body = { title, description, price }
+    role === 'newAdv'
+      ? addAdv(body)
+          .then((newId) => {
+            const id = newId
+            const fileCount = image.length > 5 ? 5 : image.length
+            for (let i = 0; i < fileCount; i++) {
+              const body = new FormData()
+              body.append('file', image[i])
+              addImg({ id, body })
+            }
+          })
+
+          .then(() => {
+            setModal('unvisible')
+            setTitle('')
+            setDescription('')
+            setPrice('')
+            setImage([])
+            setDataImg([])
+            inputRef.current.value = []
+          })
+      : updateAdv({ id: advId, body, token })
+          .unwrap()
+
+          .then(() => {
+            const fileCount = image.length > 5 ? 5 : image.length
+            for (let i = 0; i < fileCount; i++) {
+              const body = new FormData()
+              body.append('file', image[i])
+              addImg({ id: advId, body, token }).unwrap()
+            }
+          })
+
+          .then(() => {
+            setModal('unvisible')
+            setTitle('')
+            setDescription('')
+            setPrice('')
+            setImage([])
+            setDataImg([])
+            inputRef.current.value = []
+          })
+  }
+
+  const handleClickToImgArea = () => {
+    inputRef.current.click()
+  }
+
+  const handleClickToImg = (e, key) => {
+    e.stopPropagation()
+    setImage((prev) => prev.filter((elem, index) => index != key))
+  }
+
+  const handleImageChange = async (event) => {
+    setImage((prev) => [...prev, event.target.files[0]])
+  }
+
+  const prepareImg = (key) => {
+    return URL.createObjectURL(image[key])
+  }
+
+  const handleClickToDeleteImg = (e, urlId, key) => {
+    e.stopPropagation()
+    const file_url = new URLSearchParams()
+    file_url.append('file_url', urlId)
+    deleteImg({ id: advId, file_url, token })
+    setDataImg((prev) => prev.filter((elem, index) => elem[index] != elem[key]))
+  }
+
+  if (role === 'editAdv') {
+    useEffect(() => {
+      setTitle(data.title)
+      setDescription(data.description)
+      setPrice(data.price)
+      setDataImg(data.images)
+    }, [data])
+  }
+
+  useEffect(() => {
+    if (title.trim() && description.trim() && price) {
+      setDisabled(false)
+    } else {
+      setDisabled(true)
+    }
+  }, [title, description, price])
+
+  return (
+    <S.ModalForm modal={modal}>
+      <form className="visible">
+        <input
+          type="file"
+          name="files[]"
+          ref={inputRef}
+          onChange={(e) => handleImageChange(e)}
+        />
+      </form>
+      <S.ModalExit onClick={() => clickToexit()} />
+      <S.ModalFormArea>
+        <S.ModalTitle>
+          {role === 'newAdv' ? 'Новое объявление' : 'Редактировать объявление'}
+        </S.ModalTitle>
+        <S.ModalLabel htmlFor="title">Название</S.ModalLabel>
+        <S.ModalInput
+          name="title"
+          value={title}
+          placeholder="Введите название"
+          onChange={(e) => setTitle(e.target.value)}
+        />
+        <S.ModalLabel htmlFor="description">Описание</S.ModalLabel>
+        <S.ModalTextarea
+          name="description"
+          placeholder="Введите описание"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <S.ModalLabel htmlFor="photos">
+          Фотографии товара{' '}
+          <span style={{ opacity: '0.3' }}>&nbsp; не более 5 фотографий</span>
+        </S.ModalLabel>
+        <S.ModalPhotosContainer>
+          <S.ModalPhoto onClick={() => handleClickToImgArea()}>
+            {role === 'newAdv' ? (
+              image[0] ? (
+                <S.ModalImg
+                  src={prepareImg(0)}
+                  onClick={(e) => handleClickToImg(e, 0)}
+                  alt="Фото"
+                />
+              ) : (
+                <ModalSVG />
+              )
+            ) : dataImg[0] ? (
+              <S.ModalImg
+                src={`http://localhost:8090/${dataImg[0].url}`}
+                onClick={(e) => handleClickToDeleteImg(e, dataImg[0].url, 0)}
+                alt="Фото"
+              />
+            ) : image[0] ? (
+              <S.ModalImg
+                src={prepareImg(0)}
+                onClick={(e) => handleClickToImg(e, 0)}
+              />
+            ) : (
+              <ModalSVG />
+            )}
+          </S.ModalPhoto>
+
+          <S.ModalPhoto onClick={() => handleClickToImgArea()}>
+            {role === 'newAdv' ? (
+              image[1] ? (
+                <S.ModalImg
+                  src={prepareImg(1)}
+                  onClick={(e) => handleClickToImg(e, 1)}
+                />
+              ) : (
+                <ModalSVG />
+              )
+            ) : dataImg[1] ? (
+              <S.ModalImg
+                src={`http://localhost:8090/${dataImg[1].url}`}
+                alt="Фото"
+                onClick={(e) => handleClickToDeleteImg(e, dataImg[1].url)}
+              />
+            ) : image[1 - dataImg.length] ? (
+              <S.ModalImg
+                src={prepareImg(1 - dataImg.length)}
+                onClick={(e) => handleClickToImg(e, 1 - dataImg.length)}
+                alt="Фото"
+              />
+            ) : (
+              <ModalSVG />
+            )}
+          </S.ModalPhoto>
+
+          <S.ModalPhoto onClick={() => handleClickToImgArea()}>
+            {role === 'newAdv' ? (
+              image[2] ? (
+                <S.ModalImg
+                  src={prepareImg(2)}
+                  onClick={(e) => handleClickToImg(e, 2)}
+                />
+              ) : (
+                <ModalSVG />
+              )
+            ) : dataImg[2] ? (
+              <S.ModalImg
+                src={`http://localhost:8090/${dataImg[2].url}`}
+                alt="Фото"
+                onClick={(e) => handleClickToDeleteImg(e, dataImg[2].url)}
+              />
+            ) : image[2 - dataImg.length] ? (
+              <S.ModalImg
+                src={prepareImg(2 - dataImg.length)}
+                onClick={(e) => handleClickToImg(e, 2 - dataImg.length)}
+                alt="Фото"
+              />
+            ) : (
+              <ModalSVG />
+            )}
+          </S.ModalPhoto>
+
+          <S.ModalPhoto onClick={() => handleClickToImgArea()}>
+            {role === 'newAdv' ? (
+              image[3] ? (
+                <S.ModalImg
+                  src={prepareImg(3)}
+                  onClick={(e) => handleClickToImg(e, 3)}
+                />
+              ) : (
+                <ModalSVG />
+              )
+            ) : dataImg[3] ? (
+              <S.ModalImg
+                src={`http://localhost:8090/${dataImg[3].url}`}
+                alt="Фото"
+                onClick={(e) => handleClickToDeleteImg(e, dataImg[3].url)}
+              />
+            ) : image[3 - dataImg.length] ? (
+              <S.ModalImg
+                src={prepareImg(3 - dataImg.length)}
+                onClick={(e) => handleClickToImg(e, 3 - dataImg.length)}
+                alt="Фото"
+              />
+            ) : (
+              <ModalSVG />
+            )}
+          </S.ModalPhoto>
+          <S.ModalPhoto onClick={() => handleClickToImgArea()}>
+            {role === 'newAdv' ? (
+              image[4] ? (
+                <S.ModalImg
+                  src={prepareImg(4)}
+                  onClick={(e) => handleClickToImg(e, 4)}
+                />
+              ) : (
+                <ModalSVG />
+              )
+            ) : dataImg[4] ? (
+              <S.ModalImg
+                src={`http://localhost:8090/${dataImg[4].url}`}
+                alt="Фото"
+                onClick={(e) => handleClickToDeleteImg(e, dataImg[4].url)}
+              />
+            ) : image[4 - dataImg.length] ? (
+              <S.ModalImg
+                src={prepareImg(4 - dataImg.length)}
+                onClick={(e) => handleClickToImg(e, 4 - dataImg.length)}
+                alt="Фото"
+              />
+            ) : (
+              <ModalSVG />
+            )}
+          </S.ModalPhoto>
+        </S.ModalPhotosContainer>
+        <S.ModalLabel htmlFor="price">Цена</S.ModalLabel>
+        <S.ModalPriceContainer>
+          <S.ModalPrice
+            type="number"
+            name="price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />{' '}
+          ₽
+        </S.ModalPriceContainer>
+        <S.ModalButton disabled={disabled} onClick={(e) => handleClickToAdd(e)}>
+          {role === 'newAdv' ? 'Опубликовать' : 'Сохранить'}
+        </S.ModalButton>
+      </S.ModalFormArea>
+    </S.ModalForm>
+  )
+}
