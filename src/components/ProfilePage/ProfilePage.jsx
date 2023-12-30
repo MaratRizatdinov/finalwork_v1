@@ -6,14 +6,14 @@ import {
   useGetUserQuery,
   useUpdateUserMutation,
 } from '../../redux/reducers/userApi'
-import { getToken } from '../../scripts/tools'
+
 import { ModalAvatar } from './ModalAvatar/ModalAvatar'
 import { useGetAdsQuery } from '../../redux'
 
 export const ProfilePage = () => {
   const navigate = useNavigate()
-  const token = getToken()
-  const { data, isLoading: getLoading} = useGetUserQuery(token)
+  
+  const { data, isLoading: getLoading} = useGetUserQuery()
   const {refetch} =useGetAdsQuery()
   const [updateUser] = useUpdateUserMutation()
 
@@ -39,7 +39,7 @@ export const ProfilePage = () => {
     e.preventDefault()
     setDisabled(true)
     const body = { name, surname, city, phone }
-    await updateUser({ body, token })
+    await updateUser({ body })
       .unwrap()      
       .then(()=>refetch())
       .catch(() => navigate('/login'))

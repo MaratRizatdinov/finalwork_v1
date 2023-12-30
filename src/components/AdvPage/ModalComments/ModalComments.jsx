@@ -4,11 +4,11 @@ import { useParams } from 'react-router-dom'
 import { useGetAdvCommentsQuery } from '../../../redux'
 import { getAuthorization } from '../../../scripts/tools'
 import { useAddCommentMutation } from '../../../redux'
-import { getToken } from '../../../scripts/tools'
+
 
 
 export const ModalComments = ({ modal, setModal }) => {
-  const token = getToken()
+  
   const isAuthUser = getAuthorization()
   const [text, setText] = useState('')
 
@@ -19,7 +19,7 @@ export const ModalComments = ({ modal, setModal }) => {
 
   const handleClick = () => {
     const body = JSON.stringify({ text: text })
-    addComment({ id: advParam.id, body, token })
+    addComment({ id: advParam.id, body })
     setText('')
   }
 

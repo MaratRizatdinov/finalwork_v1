@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
 import * as S from './ModalAvatar.style'
 import { useUpdateAvatarMutation } from '../../../redux/reducers/userApi'
-import { getToken } from '../../../scripts/tools'
+
 import { useNavigate } from 'react-router-dom'
 
 export const ModalAvatar = ({ modal, setModal, avatar }) => {
@@ -12,12 +12,12 @@ export const ModalAvatar = ({ modal, setModal, avatar }) => {
 
   const inputRef = useRef(0)
   const submitRef = useRef(0)
-  const token = getToken()
+  
 
   const updateFn = async (file) => {
     const body = new FormData()
     body.append('file', file)
-    await updateAvatar({ body, token })
+    await updateAvatar({ body})
       .unwrap()
       .catch(() => navigate('/login'))
   }

@@ -6,12 +6,10 @@ import * as Tools from '../../scripts/tools'
 import { ModalComments } from './ModalComments/ModalComments'
 import { useNavigate } from 'react-router-dom'
 import { useGetUserQuery } from '../../redux/reducers/userApi'
-import { getToken } from '../../scripts/tools'
 import { ModalAdv } from '../ModalAdv/ModalAdv'
-import { useAuthMutations } from '../../scripts/hooks/useAuthMutations'
+import { useDeleteAdvMutation } from '../../redux'
 
 export const AdvPage = () => {
-
   const navigate = useNavigate()
   const advParam = useParams()
 
@@ -19,22 +17,21 @@ export const AdvPage = () => {
   const [mainUrl, setMainUrl] = useState(0)
   const [modalComment, setModalComment] = useState('unvisible')
   const [modalEdit, setModalEdit] = useState('unvisible')
-  const token = getToken()
   
-  const { data: user } = useGetUserQuery(token)
-  const { data: comments } = useGetAdvCommentsQuery(advParam.id)
-  const { data: adv } = useGetAdvQuery(advParam.id)
-  const {deleteAdv} = useAuthMutations()
 
+  const { data: user } = useGetUserQuery()
+  const { data: comments } = useGetAdvCommentsQuery(advParam.id)
+  const { data: adv } = useGetAdvQuery(advParam.id)  
+  const [deleteAdv] = useDeleteAdvMutation()
 
   const userID = user?.id || 'noAuth'
-  
+
   const handleRouteToSellerPage = (id) => {
     navigate(`/profile/${id}`)
   }
 
   const clickToDeleteAdv = () => {
-    deleteAdv(adv.id)    
+    deleteAdv(adv.id)
     navigate(-1)
   }
 
@@ -46,7 +43,9 @@ export const AdvPage = () => {
         {modalComment === 'visible' || modalEdit === 'visible' ? (
           <S.AdvBackground />
         ) : null}
-        <ModalComments modal={modalComment} setModal={setModalComment} />
+        {modalComment === 'visible' ? (
+          <ModalComments modal={modalComment} setModal={setModalComment} />
+        ) : null}
         {modalEdit === 'visible' ? (
           <ModalAdv modal={modalEdit} setModal={setModalEdit} role="editAdv" />
         ) : null}
@@ -147,9 +146,7 @@ export const AdvPage = () => {
             <S.AdvTitle>{adv && adv.title}</S.AdvTitle>
             <S.AdvInfo>
               <S.AdvDate>{adv && Tools.editDate(adv)}</S.AdvDate>
-              <S.AdvCity>
-                {adv && adv.user.city}
-              </S.AdvCity>
+              <S.AdvCity>{adv && adv.user.city}</S.AdvCity>
               <S.AdvLink onClick={() => setModalComment('visible')}>
                 {Tools.editWordEnd(comments && comments.length)}
               </S.AdvLink>

@@ -71,13 +71,8 @@ export const createTextSellsFrom = (date) => {
   return String(data.toLocaleString('ru', options)).slice(2)
 }
 
-// 8. Быстрое получение токена из стора
 
-export const getToken = () => {
-  const token = useSelector((state) => state.user.access_token)
-  return token || 'unAuthorized'
-}
-// 9. Быстрое получение cостояния авторизации на сайте
+// 8. Быстрое получение cостояния авторизации на сайте
 
 export const getAuthorization = () => {
   const isAuthUser = useSelector((state) => state.user.authorization)

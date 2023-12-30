@@ -2,17 +2,23 @@ import React, { useEffect, useState, useRef } from 'react'
 import * as S from './ModalAdv.style'
 import { ModalSVG } from './ModalSVG'
 import { useParams } from 'react-router-dom'
-import { useGetAdvQuery } from '../../redux/reducers/adsApi'
-import { useAuthMutations } from '../../scripts/hooks/useAuthMutations'
+import {
+  useAddImgMutation,
+  useDeleteImgMutation,
+  useGetAdvQuery,
+  useUpdateAdvMutation,
+  useAddAdvMutation,
+} from '../../redux/reducers/adsApi'
 
 export const ModalAdv = ({ modal, setModal, role }) => {
-  // const token = getToken()
   const advId = useParams().id
   const inputRef = useRef(0)
 
-  // const [deleteImg] = useDeleteImgMutation()
+  const [deleteImg] = useDeleteImgMutation()
   const { data } = useGetAdvQuery(advId)
-  const { addAdv, addImg, updateAdv, deleteImg } = useAuthMutations()
+  const [addAdv] = useAddAdvMutation()
+  const [addImg] = useAddImgMutation()
+  const [updateAdv] = useUpdateAdvMutation()
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -35,9 +41,10 @@ export const ModalAdv = ({ modal, setModal, role }) => {
     e.preventDefault()
     const body = { title, description, price }
     role === 'newAdv'
-      ? addAdv(body)
-          .then((newId) => {
-            const id = newId
+      ? addAdv({ body })
+          .unwrap()
+          .then((fulfilled) => {
+            const id = fulfilled.id
             const fileCount = image.length > 5 ? 5 : image.length
             for (let i = 0; i < fileCount; i++) {
               const body = new FormData()

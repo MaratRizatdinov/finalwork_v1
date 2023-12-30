@@ -7,9 +7,8 @@ export const userApi = createApi({
   baseQuery: baseQueryWithReauth,
   endpoints: (build) => ({
     getUser: build.query({
-      query: (token) => ({
-        url: 'user',
-        headers: { Authorization: `Bearer ${token}` },
+      query: () => ({
+        url: 'user',        
       }),
       providesTags: ['User'],
     }),
@@ -20,18 +19,17 @@ export const userApi = createApi({
       providesTags: ['User'],
     }),
     updateUser: build.mutation({
-      query: ({ body, token }) => ({
-        url: 'user',
-        headers: { Authorization: `Bearer ${token}` },
+      query: ({ body}) => ({
+        url: 'user',        
         method: 'PATCH',
         body,
       }),
       invalidatesTags: ['User'],
     }),
     updateAvatar: build.mutation({
-      query: ({ body, token }) => ({
+      query: ({ body }) => ({
         url: 'user/avatar',
-        headers: { Authorization: `Bearer ${token}`, formData: true },
+        headers: { formData: true },
         method: 'POST',
         body,
       }),

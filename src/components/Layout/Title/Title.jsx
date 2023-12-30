@@ -2,14 +2,13 @@ import React from 'react'
 import * as S from './Title.style'
 import { useLocation } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
-import { getToken } from '../../../scripts/tools'
 import { useGetUserQuery } from '../../../redux/reducers/userApi'
 
 export const Title = () => {
 
   const page = useLocation().pathname
   const info = useParams()
-  const {data} =useGetUserQuery(getToken())
+  const {data} =useGetUserQuery()
 
   const TitleText = () => {
     if (page === '/') return 'Объявления'
