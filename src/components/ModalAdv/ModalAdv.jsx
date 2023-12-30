@@ -1,26 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react'
 import * as S from './ModalAdv.style'
 import { ModalSVG } from './ModalSVG'
-import {
-  // useAddImgMutation,
-  useDeleteImgMutation,
-  useUpdateAdvMutation,
-} from '../../redux/reducers/adsApi'
-import { getToken } from '../../scripts/tools'
 import { useParams } from 'react-router-dom'
 import { useGetAdvQuery } from '../../redux/reducers/adsApi'
 import { useAuthMutations } from '../../scripts/hooks/useAuthMutations'
 
 export const ModalAdv = ({ modal, setModal, role }) => {
-  const token = getToken()
+  // const token = getToken()
   const advId = useParams().id
   const inputRef = useRef(0)
 
-  // const {addImg = useAddImgMutation()
-  const [updateAdv] = useUpdateAdvMutation()
-  const [deleteImg] = useDeleteImgMutation()
+  // const [deleteImg] = useDeleteImgMutation()
   const { data } = useGetAdvQuery(advId)
-  const { addAdv, addImg } = useAuthMutations()
+  const { addAdv, addImg, updateAdv, deleteImg } = useAuthMutations()
 
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -53,7 +45,6 @@ export const ModalAdv = ({ modal, setModal, role }) => {
               addImg({ id, body })
             }
           })
-
           .then(() => {
             setModal('unvisible')
             setTitle('')
@@ -63,15 +54,13 @@ export const ModalAdv = ({ modal, setModal, role }) => {
             setDataImg([])
             inputRef.current.value = []
           })
-      : updateAdv({ id: advId, body, token })
-          .unwrap()
-
+      : updateAdv({ id: advId, body })
           .then(() => {
             const fileCount = image.length > 5 ? 5 : image.length
             for (let i = 0; i < fileCount; i++) {
               const body = new FormData()
               body.append('file', image[i])
-              addImg({ id: advId, body, token }).unwrap()
+              addImg({ id: advId, body })
             }
           })
 
@@ -107,7 +96,7 @@ export const ModalAdv = ({ modal, setModal, role }) => {
     e.stopPropagation()
     const file_url = new URLSearchParams()
     file_url.append('file_url', urlId)
-    deleteImg({ id: advId, file_url, token })
+    deleteImg({ id: advId, file_url })
     setDataImg((prev) => prev.filter((elem, index) => elem[index] != elem[key]))
   }
 

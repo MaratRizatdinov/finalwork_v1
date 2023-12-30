@@ -13,12 +13,14 @@ const userSlice = createSlice({
       state.refresh_token = action.payload.refresh
       state.authorization =true
     },
-    addRefreshToken(state, action) {
-      state.refresh_token = action.payload.value
+    clearTokens(state) {
+      state.authorization =false
+      state.access_token = ''
+      state.refresh_token = ''
     },
   },
 })
 
-export const { addTokens, addRefreshToken } = userSlice.actions
+export const { addTokens, clearTokens } = userSlice.actions
 
 export default userSlice.reducer

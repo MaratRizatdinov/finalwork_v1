@@ -2,17 +2,25 @@ import {
   useAddImgMutation,
   useDeleteAdvMutation,
   useAddAdvMutation,
+  useUpdateAdvMutation,
+  useDeleteImgMutation
 } from '../../redux'
 import { getToken } from '../tools'
 import { useRefreshToken } from './useRefreshToken'
-// import { useAddAdvMutation } from '../../redux'
+// import { useAddCommentMutation } from '../../redux'
+
 
 export const useAuthMutations = () => {
   let token = getToken()
+
   const [deleteAdvAttempt] = useDeleteAdvMutation()
   const [refreshToken] = useRefreshToken()
-  const [addAdvAttempt, { isError: advError }] = useAddAdvMutation()
+  const [addAdvAttempt] = useAddAdvMutation()
   const [addImgAttempt] = useAddImgMutation()
+  const [updateAdvAttempt] = useUpdateAdvMutation()
+  const [deleteImgAttempt] = useDeleteImgMutation()
+  // const [addCommentAttempt] = useAddCommentMutation()
+
 
   const deleteAdv = async (id) => {
     await deleteAdvAttempt({ id, token })
@@ -26,43 +34,14 @@ export const useAuthMutations = () => {
   }
 
   const addAdv = async (body) => {
-
-    addAdvAttempt({ body, token }).unwrap
-
-    if(!advError){
-      console.log ("ok")
+    try {
+      const result = await addAdvAttempt({ body, token }).unwrap()
+      return result.id
+    } catch (error) {
+      const token = await refreshToken()
+      const result = await addAdvAttempt({ body, token }).unwrap()
+      return result.id
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // const newId = addAdvAttempt({ body, token })
-    //   .unwrap()
-    //   .then((fulfilled) => {
-    //     const data = fulfilled.id
-    //     return data
-    //   })
-    //   .catch(() => {
-    //     refreshToken().then((data) => {
-    //       token = data
-    //       addAdvAttempt({ body, token })
-    //         .unwrap()
-    //         .then(() => {
-    //           console.log(refetchData)
-    //         })
-    //     })
-    //   })
-    // return newId
   }
 
   const addImg = async ({ id, body }) => {
@@ -76,5 +55,35 @@ export const useAuthMutations = () => {
       })
   }
 
-  return { deleteAdv, addAdv, addImg }
+  const updateAdv = async ({ id, body }) => {
+    try {
+      await updateAdvAttempt({ id, body, token }).unwrap()
+    } catch (error) {
+      const token = await refreshToken()
+      await addAdvAttempt({ id, body, token }).unwrap()
+    }
+  }
+
+  const deleteImg = async ({ id, file_url }) => {
+    try {
+      await deleteImgAttempt({ id, file_url, token }).unwrap()
+    } catch (error) {
+      const token = await refreshToken()
+      await deleteImgAttempt({ id, file_url, token }).unwrap()
+    }
+  }
+
+  // const addComment 
+
+
+
+
+
+
+
+
+
+
+
+  return { deleteAdv, addAdv, addImg, updateAdv, deleteImg }
 }
