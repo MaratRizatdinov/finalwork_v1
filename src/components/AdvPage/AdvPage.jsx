@@ -52,17 +52,16 @@ export const AdvPage = () => {
         <S.AdvContent>
           <S.AdvLeftSide>
             <S.AdvFillImg>
-              <S.AdvMainImg>
-                <img
+              <S.AdvMainImgCont>
+                <S.AdvMainImg
                   src={
                     adv &&
                     adv.images[mainUrl] &&
                     `http://localhost:8090/${adv.images[mainUrl].url}`
                   }
-                  alt=""
-                  style={{ width: '480px', height: '480px' }}
+                  alt=""                  
                 />
-              </S.AdvMainImg>
+              </S.AdvMainImgCont>
               <S.AdvBar>
                 <S.AdvBarImg
                   id={0}

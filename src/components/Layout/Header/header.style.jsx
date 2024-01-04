@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 
-
 export const Header = styled.div`
   background-color: #009ee4;
   display: flex;
@@ -14,6 +13,12 @@ export const HeaderNav = styled.div`
   align-items: center;
   justify-content: end;
   gap: 10px;
+  position: relative;
+  @media (max-width: 320px) {
+    height: 55px;
+    justify-content: start;
+    padding-left: 17px;
+  }
 `
 export const HeaderButton = styled.div`
   // width: 224px;
@@ -37,6 +42,9 @@ export const HeaderButton = styled.div`
   &:active {
     background-color: #009ee4;
   }
+  @media (max-width: 320px) {
+    display: none;
+  }
 `
 export const ProfileBackground = styled.div`
   width: 100%;
@@ -47,4 +55,54 @@ export const ProfileBackground = styled.div`
   top: 0px;
   opacity: 0.05;
   z-index: 1;
+`
+export const ExitButton = styled.div`
+  width: 40px;
+  height: 40px;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 20px;
+  left: 1230px;
+  @media (max-width: 320px) {
+    display: none;
+  }
+`
+export const ExitImg = styled.img`
+  height: 40px;
+  width: 40px;
+  opacity: 1;
+  &:hover {
+    opacity: 0.7;
+  }
+  &:active {
+    opacity: 1;
+  }
+`
+export const SmallLogo = styled.img`
+  width: 32px;
+  height: 32px;
+  display: none;
+  @media (max-width: 320px) {
+    display: block;
+  }
+`
+export const SearchField = styled.input`
+  display: none;
+  @media (max-width: 320px) {
+    display: block;
+    width: 243px;
+    height:32px;
+    border: 1px solid #d9d9d9;
+    border-radius: 30px;
+    padding: 9px 17px;
+    font-size: 14px;
+    line-height: 21px;    
+    &::placeholder {
+      color: #d9d9d9;
+    }  
+  }
 `

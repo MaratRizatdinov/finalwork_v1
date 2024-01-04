@@ -5,7 +5,7 @@ export const ModalInput = ({ field, value, setValue }) => {
     email: {
       type: 'text',
       name: 'login',
-      placeholder: 'E-mail',
+      placeholder: 'email',
     },
     name: {
       type: 'text',

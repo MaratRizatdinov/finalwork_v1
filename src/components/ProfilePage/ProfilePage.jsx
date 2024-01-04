@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react'
 import { CardsField } from '../CardsField/CardsField'
 import * as S from './ProfilePage.style'
 import {
@@ -9,12 +8,18 @@ import {
 
 import { ModalAvatar } from './ModalAvatar/ModalAvatar'
 import { useGetAdsQuery } from '../../redux'
+import { useDispatch } from 'react-redux'
+import { changeUser } from '../../redux/reducers/userSlice'
 
 export const ProfilePage = () => {
-  const navigate = useNavigate()
-  
-  const { data, isLoading: getLoading} = useGetUserQuery()
-  const {refetch} =useGetAdsQuery()
+  const dispatch = useDispatch()
+  const nameRef = useRef()
+
+  const { data, isLoading } = useGetUserQuery(
+    {},
+    { refetchOnMountOrArgChange: true },
+  )
+  const { refetch } = useGetAdsQuery(({}, { refetchOnMountOrArgChange: true }))
   const [updateUser] = useUpdateUserMutation()
 
   const [name, setName] = useState('')
@@ -24,31 +29,44 @@ export const ProfilePage = () => {
   const [avatar, setAvatar] = useState('')
   const [modal, setModal] = useState('unvisible')
   const [disabled, setDisabled] = useState(true)
+  const [focus, setFocus] = useState('')
 
   useEffect(() => {
-    if (!getLoading) {
+    if (!isLoading) {
       setName(data.name)
       setSurname(data.surname)
       setCity(data.city)
       setPhone(data.phone)
       setAvatar(data.avatar)
+      dispatch(changeUser(data.name))
     }
-  }, [getLoading, data])
+  }, [data])
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!nameRef.current.contains(e.target)) {
+        setFocus('')
+      }
+    }
+    document.addEventListener('click', handleClickOutside)
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [focus])
 
   const handleClickToUpdate = async (e) => {
     e.preventDefault()
     setDisabled(true)
     const body = { name, surname, city, phone }
     await updateUser({ body })
-      .unwrap()      
-      .then(()=>refetch())
-      .catch(() => navigate('/login'))
+      .unwrap()
+      .then(() => refetch())
   }
 
   return (
     <S.ProfileContainer>
-      <ModalAvatar modal={modal} setModal={setModal} avatar={avatar}/>
-      {modal==='visible' ? <S.ProfileBackground /> : null}
+      <ModalAvatar modal={modal} setModal={setModal} avatar={avatar} />
+      {modal === 'visible' ? <S.ProfileBackground /> : null}
       <S.ProfileContent>
         <S.ProfileTitle>Настройки профиля</S.ProfileTitle>
         <S.ProfileSettings>
@@ -62,9 +80,11 @@ export const ProfilePage = () => {
             </S.ProfileChangeButton>
           </S.ProfileLeft>
           <S.ProfileRight>
-            <S.ProfileForm>
+            <S.ProfileForm ref={nameRef}>
               <S.ProfileBlock>
-                <S.ProfileLabel htmlFor="name">Имя</S.ProfileLabel>
+                <S.ProfileLabel htmlFor="name" focus={focus}>
+                  Имя
+                </S.ProfileLabel>
                 <S.ProfileInput
                   id="name"
                   name="name"
@@ -74,12 +94,17 @@ export const ProfilePage = () => {
                     setName(e.target.value)
                     setDisabled(false)
                   }}
+                  onFocus={(e) => {
+                    e.stopPropagation()
+                    setFocus('name')
+                  }}
                   placeholder="Введите имя"
                 />
               </S.ProfileBlock>
-
               <S.ProfileBlock>
-                <S.ProfileLabel htmlFor="surname">Фамилия</S.ProfileLabel>
+                <S.ProfileLabel htmlFor="surname" focus={focus}>
+                  Фамилия
+                </S.ProfileLabel>
                 <S.ProfileInput
                   id="surname"
                   name="surname"
@@ -89,12 +114,14 @@ export const ProfilePage = () => {
                     setSurname(e.target.value)
                     setDisabled(false)
                   }}
+                  onFocus={() => setFocus('surname')}
                   placeholder="Введите фамилию"
                 />
               </S.ProfileBlock>
-
               <S.ProfileBlock>
-                <S.ProfileLabel htmlFor="city">Город</S.ProfileLabel>
+                <S.ProfileLabel htmlFor="city" focus={focus}>
+                  Город
+                </S.ProfileLabel>
                 <S.ProfileInput
                   id="city"
                   name="city"
@@ -104,12 +131,14 @@ export const ProfilePage = () => {
                     setCity(e.target.value)
                     setDisabled(false)
                   }}
+                  onFocus={() => setFocus('city')}
                   placeholder="Введите город"
                 />
               </S.ProfileBlock>
-
               <S.ProfileBlock>
-                <S.ProfileLabel htmlFor="phone">Телефон</S.ProfileLabel>
+                <S.ProfileLabel htmlFor="phone" focus={focus}>
+                  Телефон
+                </S.ProfileLabel>
                 <S.ProfileInput
                   id="phone"
                   name="phone"
@@ -119,10 +148,10 @@ export const ProfilePage = () => {
                     setPhone(e.target.value)
                     setDisabled(false)
                   }}
+                  onFocus={() => setFocus('phone')}
                   placeholder="+7(XXX)XXX-XX-XX"
                 />
               </S.ProfileBlock>
-
               <S.ProfileSaveButton
                 disabled={disabled}
                 onClick={(e) => handleClickToUpdate(e)}
@@ -135,7 +164,7 @@ export const ProfilePage = () => {
       </S.ProfileContent>
 
       <S.ProfileTitle>Мои товары</S.ProfileTitle>
-      <CardsField user={data && data.id} adv='myAdv'/>
+      <CardsField user={data && data.id} adv="myAdv" />
     </S.ProfileContainer>
   )
 }

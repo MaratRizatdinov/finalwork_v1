@@ -49,6 +49,6 @@ export const CardsField = ({ user }) => {
   }
 
   return (
-    <S.CardsField>{isLoading ? skeletonCard(path) : listOfItems}</S.CardsField>
+    <S.CardsField path={path}>{isLoading ? skeletonCard(path) : listOfItems}</S.CardsField>
   )
 }

@@ -23,9 +23,11 @@ export const editPrice = (elem) => {
 // 3. Функция редактирует дату - получаем фразу сколько времени прошло с момента публикации
 
 export const editDate = (elem) => {
-  return (
-    formatDistanceToNow(new Date(elem.created_on), { locale: ru }) + ' назад'
-  )
+  let date =new Date(elem.created_on).getTime()
+  let correctDate =new Date (date +10800000)    
+  let formatdate =  formatDistanceToNow(correctDate, { locale: ru }) + ' назад'
+  return formatdate
+  
 }
 
 // 4. Функция создает текст с количеством отзывов
@@ -59,7 +61,7 @@ export const maskPhone = (str) => {
   if (!str || str.length < 9) return
   return str.slice(0, str.length - 9).trim() + ' XXX XX XX'
 }
-// 7. Создаем строку вывода даты начала продаж
+// 7. Создаем строку вывода даты начала продаж и дату комментария
 
 export const createTextSellsFrom = (date) => {
   const data = new Date(date)
@@ -69,6 +71,16 @@ export const createTextSellsFrom = (date) => {
     day: 'numeric',
   }
   return String(data.toLocaleString('ru', options)).slice(2)
+}
+
+export const createCommentDate = (date) => {
+  const data = new Date(date)
+  var options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }
+  return String(data.toLocaleString('ru', options))
 }
 
 

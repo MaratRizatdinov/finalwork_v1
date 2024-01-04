@@ -1,5 +1,5 @@
 import {  fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { addTokens, clearTokens } from './userSlice'
+import { exitFromApp } from './userSlice'
 
 
 export const baseQueryWithReauth = async (args, api, extraOptions) => {
@@ -20,7 +20,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
       return result
     }
     const logout = () => {
-      api.dispatch(clearTokens())
+      api.dispatch(exitFromApp())
       window.location.navigate('/login')
     }
     const refresh = localStorage.getItem('refresh')
@@ -45,12 +45,7 @@ export const baseQueryWithReauth = async (args, api, extraOptions) => {
       return logout()
     }
   
-    api.dispatch(
-      addTokens({
-        access: refreshResult.data.access_token,
-        refresh: refreshResult.data.refresh_token,
-      }),
-    )
+    
     localStorage.setItem("access", refreshResult.data.access_token)
     localStorage.setItem("refresh", refreshResult.data.refresh_token)
   

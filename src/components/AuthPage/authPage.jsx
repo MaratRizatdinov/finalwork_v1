@@ -7,7 +7,11 @@ import { checkData } from '../../scripts/tools'
 import { useAddUserMutation } from '../../redux/reducers/authApi'
 import { useGetTokensMutation } from '../../redux/reducers/authApi'
 import { useDispatch } from 'react-redux'
-import { addTokens } from '../../redux/reducers/userSlice'
+import { logInApp } from '../../redux/reducers/userSlice'
+import  small_logo from './logo-mob.svg'
+import { Footer } from '../Footer/footer'
+
+
 
 export const AuthPage = ({ isLoginMode }) => {
   const navigate = useNavigate()
@@ -21,6 +25,7 @@ export const AuthPage = ({ isLoginMode }) => {
   const [error, setError] = useState('')
   const [addUser, { isLoading: regLoading }] = useAddUserMutation()
   const [getTokens, { isLoading: tokenLoading }] = useGetTokensMutation()
+  
 
   const handleClick = async () => {
     if (checkData({ email, password, repeat, isLoginMode })) {
@@ -30,19 +35,13 @@ export const AuthPage = ({ isLoginMode }) => {
     if (!isLoginMode) {
       await addUser({ email, password, name, surname, city })
         .unwrap()
-        .then((fulfilled) => {
-          console.log(fulfilled)          
+        .then(() => {
           getTokens({ email, password })
             .unwrap()
             .then((fulfilled) => {
-              dispatch(
-                addTokens({
-                  access: fulfilled.access_token,
-                  refresh: fulfilled.refresh_token,
-                }),
-              )
-              localStorage.setItem("access", fulfilled.access_token)
-              localStorage.setItem("refresh", fulfilled.refresh_token)
+              dispatch(logInApp())
+              localStorage.setItem('access', fulfilled.access_token)
+              localStorage.setItem('refresh', fulfilled.refresh_token)              
               navigate('/profile/me')
             })
             .catch((rejected) => {
@@ -60,15 +59,10 @@ export const AuthPage = ({ isLoginMode }) => {
     await getTokens({ email, password })
       .unwrap()
       .then((fulfilled) => {
-        dispatch(
-          addTokens({
-            access: fulfilled.access_token,
-            refresh: fulfilled.refresh_token,
-          }),
-        )
-        localStorage.setItem("access", fulfilled.access_token)
-        localStorage.setItem("refresh", fulfilled.refresh_token)
-
+        dispatch(logInApp())
+        localStorage.setItem('access', fulfilled.access_token)
+        localStorage.setItem('refresh', fulfilled.refresh_token)
+        
 
         navigate('/profile/me')
       })
@@ -93,7 +87,11 @@ export const AuthPage = ({ isLoginMode }) => {
 
   return (
     <S.AuthContainer>
+      
       <S.ModalForm $isLoginMode={isLoginMode}>
+      <S.ModalHeader>
+        <S.ModalSmallLogo alt='logo' src ={small_logo}/>
+      </S.ModalHeader>
         <Logotype />
         {isLoginMode ? (
           <>
@@ -109,7 +107,7 @@ export const AuthPage = ({ isLoginMode }) => {
             >
               {tokenLoading ? 'Входим...' : 'Войти'}
             </S.EnterButton>
-            <S.SignupButton onClick={() => navigate('/registration')}>
+            <S.SignupButton  $isLoginMode={isLoginMode} onClick={() => navigate('/registration')}>
               Зарегистрироваться
             </S.SignupButton>
           </>
@@ -135,6 +133,7 @@ export const AuthPage = ({ isLoginMode }) => {
             </S.EnterButton>
           </>
         )}
+        <Footer/>
       </S.ModalForm>
     </S.AuthContainer>
   )

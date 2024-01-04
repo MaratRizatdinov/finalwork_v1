@@ -4,23 +4,21 @@ const userSlice = createSlice({
   name: 'user',
   initialState: {
     authorization: false,
-    access_token: '',
-    refresh_token: '',
+    username: '',    
   },
   reducers: {
-    addTokens(state, action) {
-      state.access_token = action.payload.access
-      state.refresh_token = action.payload.refresh
-      state.authorization =true
+    logInApp(state) {
+      state.authorization = true
     },
-    clearTokens(state) {
-      state.authorization =false
-      state.access_token = ''
-      state.refresh_token = ''
+    exitFromApp(state) {
+      state.authorization = false      
+    },
+    changeUser(state, action) {
+      state.username = action.payload      
     },
   },
 })
 
-export const { addTokens, clearTokens } = userSlice.actions
+export const { logInApp, exitFromApp, changeUser } = userSlice.actions
 
 export default userSlice.reducer

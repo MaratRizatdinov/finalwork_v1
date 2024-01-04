@@ -1,10 +1,27 @@
-import styled from 'styled-components'
-import { ButtonStyle } from '../../../generalStyles/generalStyle'
+import {styled,css} from 'styled-components'
+
+
+export const ButtonStyle = css`
+  width: 100%;
+  height: 52px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  line-height: 24px;
+  cursor: pointer;
+`
+
 
 export const NavContainer = styled.div`
   display: flex;
   justify-content: center;
   padding-top: 43px;
+  @media (max-width: 320px) {
+    display: none;
+    
+  }
 `
 export const Navigation = styled.div`
   --search-width: ${(props)=>props.$page==='/' ? 'auto':'0px'};

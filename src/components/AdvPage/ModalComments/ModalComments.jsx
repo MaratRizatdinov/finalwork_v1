@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom'
 import { useGetAdvCommentsQuery } from '../../../redux'
 import { getAuthorization } from '../../../scripts/tools'
 import { useAddCommentMutation } from '../../../redux'
+import { createCommentDate } from '../../../scripts/tools'
 
 
 
@@ -39,7 +40,7 @@ export const ModalComments = ({ modal, setModal }) => {
             <S.ModalComment>
               <S.ModalAuthor>
                 {elem.author.name}
-                <S.ModalDate>&nbsp;&nbsp;{elem.created_on}</S.ModalDate>
+                <S.ModalDate>&nbsp;&nbsp;{createCommentDate(elem.created_on)}</S.ModalDate>
               </S.ModalAuthor>
               <S.ModalText>Комментарий</S.ModalText>
               <S.ModalContent>{elem.text} </S.ModalContent>

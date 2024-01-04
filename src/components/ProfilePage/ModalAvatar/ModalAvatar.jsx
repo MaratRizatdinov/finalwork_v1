@@ -2,24 +2,18 @@ import React, { useRef, useState, useEffect } from 'react'
 import * as S from './ModalAvatar.style'
 import { useUpdateAvatarMutation } from '../../../redux/reducers/userApi'
 
-import { useNavigate } from 'react-router-dom'
-
 export const ModalAvatar = ({ modal, setModal, avatar }) => {
-  const navigate = useNavigate()
   const [image, setImage] = useState(null)
   const [disabled, setDisabled] = useState(true)
   const [updateAvatar] = useUpdateAvatarMutation()
 
   const inputRef = useRef(0)
   const submitRef = useRef(0)
-  
 
   const updateFn = async (file) => {
     const body = new FormData()
     body.append('file', file)
-    await updateAvatar({ body})
-      .unwrap()
-      .catch(() => navigate('/login'))
+    await updateAvatar({ body }).unwrap()
   }
 
   const handleImageChange = async (event) => {

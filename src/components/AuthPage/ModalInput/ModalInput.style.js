@@ -11,4 +11,14 @@ export const ModalInput = styled.input`
   &::placeholder {
     color: #d9d9d9;
   }  
+  @media (max-width: 320px) {
+    width: 279px;
+    height:40px;
+    border: 1px solid #d9d9d9;
+    border-radius: 30px;
+    padding: 9px 17px;
+    font-size: 14px;
+    line-height: 21px;
+    margin-bottom: 12px;
+  }
 `

@@ -8,7 +8,7 @@ export const Logotype = () => {
   const navigate = useNavigate()
   return (
     <S.LogoField onClick={() => navigate('/')}>
-      <img alt="logo" src={logo} />
+      <S.LogoImg alt="logo" src={logo} />
     </S.LogoField>
   )
 }

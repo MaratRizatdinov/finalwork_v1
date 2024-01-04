@@ -37,9 +37,17 @@ export const SellerPage = () => {
               Продает товары с{' '}
               {Tools.createTextSellsFrom(users && currentUser[0].sells_from)}
             </S.SellerInfo>
+            <S.ProfileToMobile>
+            <S.ProfileImgContainer>
+              <S.ProfileImg
+                src={users && `http://localhost:8090/${currentUser[0].avatar}`}
+                alt=""                
+              />
+            </S.ProfileImgContainer>
+          </S.ProfileToMobile>
 
             <S.SellerButton onClick={() => setOpen(true)}>
-              Показать&nbsp;телефон
+             <p style={{textAlign:'center'}}> Показать&nbsp;телефон <br/>
               {
                 <S.SellerPhone>
                   {open
@@ -47,6 +55,7 @@ export const SellerPage = () => {
                     : users && Tools.maskPhone(currentUser[0].phone)}
                 </S.SellerPhone>
               }
+              </p>
             </S.SellerButton>
           </S.ProfileRight>
         </S.ProfileSettings>

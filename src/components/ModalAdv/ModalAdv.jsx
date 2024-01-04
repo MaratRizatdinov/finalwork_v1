@@ -126,7 +126,7 @@ export const ModalAdv = ({ modal, setModal, role }) => {
 
   return (
     <S.ModalForm modal={modal}>
-      <form className="visible">
+      <form className="unvisible">
         <input
           type="file"
           name="files[]"
@@ -184,7 +184,6 @@ export const ModalAdv = ({ modal, setModal, role }) => {
               <ModalSVG />
             )}
           </S.ModalPhoto>
-
           <S.ModalPhoto onClick={() => handleClickToImgArea()}>
             {role === 'newAdv' ? (
               image[1] ? (
@@ -211,7 +210,6 @@ export const ModalAdv = ({ modal, setModal, role }) => {
               <ModalSVG />
             )}
           </S.ModalPhoto>
-
           <S.ModalPhoto onClick={() => handleClickToImgArea()}>
             {role === 'newAdv' ? (
               image[2] ? (
@@ -238,7 +236,6 @@ export const ModalAdv = ({ modal, setModal, role }) => {
               <ModalSVG />
             )}
           </S.ModalPhoto>
-
           <S.ModalPhoto onClick={() => handleClickToImgArea()}>
             {role === 'newAdv' ? (
               image[3] ? (
