@@ -18,9 +18,14 @@ export const ModalForm = styled.div`
   align-items: center;
   flex-direction: column;
   box-shadow: 3px 3px 10px 5px #d9d9d9;
-  display: ${(props) => (props.modal === 'visible' ? 'block' : 'none')};
+  display: ${(props) => (props.modal === 'visible' ? 'flex' : 'none')};
   z-index: 2;
   opacity: 1;
+  @media (max-width: 320px) {
+    top: 0;
+    --modal-width: 320px;
+    padding: 0;
+  }
 `
 export const ModalFormArea = styled.form`
   display: flex;  
@@ -30,6 +35,9 @@ export const ModalFormArea = styled.form`
   flex-direction: column;
   align-items: start;
   background-color: #ffffff;
+  @media (max-width: 320px) {
+    width: 278px;
+  }
 }
 `
 export const ModalExit = styled.div`
@@ -43,6 +51,9 @@ export const ModalExit = styled.div`
     background-image: url(${exit_hover});
   }
   cursor: pointer;
+  @media (max-width: 320px) {
+    display: none;
+  }
 `
 export const ModalTitle = styled.div`
   height: 70px;
@@ -53,6 +64,11 @@ export const ModalTitle = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  @media (max-width: 320px) {
+    font-size: 24px;
+    line-height: 29px;
+    width: 278px;
+  }
 `
 export const ModalLabel = styled.label`
   height: 30px;
@@ -63,6 +79,12 @@ export const ModalLabel = styled.label`
   display: flex;
   align-items: center;
   margin-bottom: 5px;
+  @media (max-width: 320px) {
+    font-size: 14px;
+    line-height: 21px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 `
 export const ModalInput = styled.input`
   background-color: #ffffff;
@@ -77,7 +99,16 @@ export const ModalInput = styled.input`
   }
   &:focus {
     outline: 2px solid #d9d9d9;
-  }  
+  }
+  @media (max-width: 320px) {
+    border-radius: 30px;
+    font-size: 14px;
+    line-height: 21px;
+    padding: 9px 10px;
+    &:focus {
+      outline: 1px solid #009ee4;
+    }
+  }
 `
 export const ModalTextarea = styled.textarea`
   height: 200px;
@@ -98,6 +129,15 @@ export const ModalTextarea = styled.textarea`
   &::placeholder {
     color: #d9d9d9;
   }
+  @media (max-width: 320px) {
+    border-radius: 30px;
+    font-size: 14px;
+    line-height: 21px;
+    height: 107px;
+    &:focus {
+      outline: 1px solid #009ee4;
+    }
+  }
 `
 export const ModalPhotosContainer = styled.div`
   height: 90px;
@@ -106,6 +146,12 @@ export const ModalPhotosContainer = styled.div`
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  @media (max-width: 320px) {
+    width: 278px;
+    margin-top: 20px;
+    overflow-x: scroll;
+    height: 107px;
+  }
 `
 export const ModalPhoto = styled.div`
   height: 90px;
@@ -116,6 +162,9 @@ export const ModalPhoto = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media (max-width: 320px) {
+    flex-shrink: 0;
+  }
 `
 export const ModalPriceContainer = styled.div`
   background-color: #ffffff;
@@ -123,30 +172,37 @@ export const ModalPriceContainer = styled.div`
   border-radius: 6px;
   padding: 16px 10px;
   font-size: 16px;
-  display:flex;
+  display: flex;
   margin-bottom: 20px;
   width: 200px;
+  outline: ${(props) => (props.focus ? '2px solid #d9d9d9' : '')};
   &::placeholder {
     color: #d9d9d9;
   }
-  &:focus {
-    outline: 2px solid #d9d9d9;
-  }  
+  @media (max-width: 320px) {
+    width: 278px;
+    border-radius: 30px;
+    padding: 9px 19px;
+    outline: ${(props) => (props.focus ? '1px solid #009EE4' : '')};
+  }
 `
-export const ModalPrice = styled.input`  
-  width: 155px;  
-  border:none;
-  margin-right:10px;
+export const ModalPrice = styled.input`
+  width: 155px;
+  border: none;
+  margin-right: 10px;
   &:focus {
-    outline: 1px solid #d9d9d9;
-  }  
+    outline: none;
+  }
+  @media (max-width: 320px) {
+    width: 218px;
+  }
 `
 export const ModalButton = styled.button`
   display: flex;
-  align-items: center;  
+  align-items: center;
   justify-content: center;
   font-size: 16px;
-  line-height: 1;
+  line-height: 24px;
   color: #ffffff;
   width: 181px;
   height: 50px;
@@ -164,10 +220,57 @@ export const ModalButton = styled.button`
     background-color: #d9d9d9;
     border: 1px solid #d9d9d9;
   }
+  @media (max-width: 320px) {
+    width: 278px;
+    height: 47px;
+  }
 `
 export const ModalImg = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
 `
-
+export const HeaderNav = styled.div`
+  display: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  @media (max-width: 320px) {
+    display: flex;
+    height: 55px;
+    justify-content: start;
+    padding-left: 17px;
+    background-color: #009ee4;
+    width: 320px;
+  }
+`
+export const SmallLogo = styled.img`
+  width: 32px;
+  height: 32px;
+  display: none;
+  @media (max-width: 320px) {
+    display: block;
+  }
+`
+export const HiddenSpan = styled.span`
+  display: block;
+  &:after {
+    content: ' объявление';
+  }
+  @media (max-width: 320px) {
+    &:after {
+      content: '';
+    }
+  }
+`
+export const ModalArrow = styled.img`
+  width: 9px;
+  height: 18px;
+  margin-right: 20px;
+  display: none;
+  @media (max-width: 320px) {
+    display: block;
+  }
+`

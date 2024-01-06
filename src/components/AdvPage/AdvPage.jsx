@@ -17,11 +17,10 @@ export const AdvPage = () => {
   const [mainUrl, setMainUrl] = useState(0)
   const [modalComment, setModalComment] = useState('unvisible')
   const [modalEdit, setModalEdit] = useState('unvisible')
-  
 
   const { data: user } = useGetUserQuery()
   const { data: comments } = useGetAdvCommentsQuery(advParam.id)
-  const { data: adv } = useGetAdvQuery(advParam.id)  
+  const { data: adv } = useGetAdvQuery(advParam.id)
   const [deleteAdv] = useDeleteAdvMutation()
 
   const userID = user?.id || 'noAuth'
@@ -59,8 +58,20 @@ export const AdvPage = () => {
                     adv.images[mainUrl] &&
                     `http://localhost:8090/${adv.images[mainUrl].url}`
                   }
-                  alt=""                  
+                  alt=""
+                  onClick={() => {                    
+                    if (mainUrl == 4) {
+                      setMainUrl(0)
+                    } else setMainUrl((prev) => prev + 1)
+                  }}
                 />
+                <S.BarPointsContainer>
+                  <S.BarPoint current={mainUrl} point={0}></S.BarPoint>
+                  <S.BarPoint current={mainUrl} point={1}></S.BarPoint>
+                  <S.BarPoint current={mainUrl} point={2}></S.BarPoint>
+                  <S.BarPoint current={mainUrl} point={3}></S.BarPoint>
+                  <S.BarPoint current={mainUrl} point={4}></S.BarPoint>
+                </S.BarPointsContainer>
               </S.AdvMainImgCont>
               <S.AdvBar>
                 <S.AdvBarImg

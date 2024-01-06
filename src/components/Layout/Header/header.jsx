@@ -36,18 +36,21 @@ export const Header = ({modal, setModal}) => {
     localStorage.removeItem('refresh')
     navigate('/login')
   }
+  
+
+
   useEffect(() => {
     dispatch(addSubstring({ value }))
   }, [value])
 
   return (
     <S.Header>
-      {modal === 'visible' ? <S.ProfileBackground /> : null}
+      {modal === 'visible' ? <S.ProfileBackground page={page} /> : null}
       {modal === 'visible' ? (
         <ModalAdv modal={modal} setModal={setModal} role="newAdv" />
       ) : null}
       <S.HeaderNav>
-        <S.SmallLogo alt="logo" src={small_logo} />
+        <S.SmallLogo alt="logo" src={small_logo} onClick={()=>navigate('/')}/>
         {page === '/' ? (
           <S.SearchField
             placeholder="Поиск"

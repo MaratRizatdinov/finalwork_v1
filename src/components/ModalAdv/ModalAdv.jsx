@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import * as S from './ModalAdv.style'
 import { ModalSVG } from './ModalSVG'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import small_logo from './logo-mob.svg'
 import {
   useAddImgMutation,
   useDeleteImgMutation,
@@ -9,10 +10,13 @@ import {
   useUpdateAdvMutation,
   useAddAdvMutation,
 } from '../../redux/reducers/adsApi'
+import { Footer } from '../Footer/footer'
+import arrow from './Vector.svg'
 
 export const ModalAdv = ({ modal, setModal, role }) => {
   const advId = useParams().id
   const inputRef = useRef(0)
+  const navigate = useNavigate()
 
   const [deleteImg] = useDeleteImgMutation()
   const { data } = useGetAdvQuery(advId)
@@ -26,6 +30,7 @@ export const ModalAdv = ({ modal, setModal, role }) => {
   const [disabled, setDisabled] = useState(true)
   const [image, setImage] = useState([])
   const [dataImg, setDataImg] = useState([])
+  const [focus, setFocus] = useState(false)
 
   const clickToexit = () => {
     setModal('unvisible')
@@ -92,7 +97,12 @@ export const ModalAdv = ({ modal, setModal, role }) => {
   }
 
   const handleImageChange = async (event) => {
-    setImage((prev) => [...prev, event.target.files[0]])
+    let count=event.target.files.length
+    for (let i=0; i<count;i++){
+      if(image.length<=5){
+        setImage((prev) => [...prev, event.target.files[i]])  
+      }      
+    }    
   }
 
   const prepareImg = (key) => {
@@ -126,18 +136,34 @@ export const ModalAdv = ({ modal, setModal, role }) => {
 
   return (
     <S.ModalForm modal={modal}>
+      <S.HeaderNav>
+        <S.SmallLogo
+          alt="logo"
+          src={small_logo}
+          onClick={() => {
+            clickToexit()
+            navigate('/')
+          }}
+        />
+      </S.HeaderNav>
       <form className="unvisible">
         <input
           type="file"
           name="files[]"
           ref={inputRef}
+          multiple
           onChange={(e) => handleImageChange(e)}
         />
       </form>
       <S.ModalExit onClick={() => clickToexit()} />
       <S.ModalFormArea>
         <S.ModalTitle>
-          {role === 'newAdv' ? 'Новое объявление' : 'Редактировать объявление'}
+          <S.ModalArrow alt='' src ={arrow} onClick={() => clickToexit()} /> 
+          {role === 'newAdv' ? (
+            'Новое объявление'
+          ) : (
+            <S.HiddenSpan>Редактировать</S.HiddenSpan>
+          )}
         </S.ModalTitle>
         <S.ModalLabel htmlFor="title">Название</S.ModalLabel>
         <S.ModalInput
@@ -154,8 +180,8 @@ export const ModalAdv = ({ modal, setModal, role }) => {
           onChange={(e) => setDescription(e.target.value)}
         />
         <S.ModalLabel htmlFor="photos">
-          Фотографии товара{' '}
-          <span style={{ opacity: '0.3' }}>&nbsp; не более 5 фотографий</span>
+          <span>Фотографии товара &nbsp;</span>
+          <span style={{ opacity: '0.3' }}>не более 5 фотографий</span>
         </S.ModalLabel>
         <S.ModalPhotosContainer>
           <S.ModalPhoto onClick={() => handleClickToImgArea()}>
@@ -290,12 +316,14 @@ export const ModalAdv = ({ modal, setModal, role }) => {
           </S.ModalPhoto>
         </S.ModalPhotosContainer>
         <S.ModalLabel htmlFor="price">Цена</S.ModalLabel>
-        <S.ModalPriceContainer>
+        <S.ModalPriceContainer focus={focus}>
           <S.ModalPrice
             type="number"
             name="price"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
+            onFocus={() => setFocus(true)}
+            onBlur={() => setFocus(false)}
           />{' '}
           ₽
         </S.ModalPriceContainer>
@@ -303,6 +331,7 @@ export const ModalAdv = ({ modal, setModal, role }) => {
           {role === 'newAdv' ? 'Опубликовать' : 'Сохранить'}
         </S.ModalButton>
       </S.ModalFormArea>
+      <Footer blocked={true} />
     </S.ModalForm>
   )
 }

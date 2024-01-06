@@ -48,13 +48,17 @@ export const HeaderButton = styled.div`
 `
 export const ProfileBackground = styled.div`
   width: 100%;
-  height: 200vh;
+  height: 1336px;
+  height: ${(props)=>props.page==='/' ? '1247px' : '1336px'};
   position: absolute;
   background-color: #009ee4;
   left: 0px;
   top: 0px;
   opacity: 0.05;
   z-index: 1;
+  @media (max-width: 320px) {    
+    height:${(props)=>props.page==='/profile/me' ? '1238px' : '823px'};
+  }
 `
 export const ExitButton = styled.div`
   width: 40px;

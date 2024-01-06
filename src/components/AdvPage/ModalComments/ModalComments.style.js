@@ -14,13 +14,18 @@ export const ModalForm = styled.div`
   background-color: #ffffff;
   border-radius: 12px;
   padding: 18px 47px 47px 40px;
-  display: flex;
   align-items: center;
   flex-direction: column;
   box-shadow: 3px 3px 10px 5px #d9d9d9;
-  display: ${(props) => (props.modal === 'visible' ? 'block' : 'none')};
+  display: ${(props) => (props.modal === 'visible' ? 'flex' : 'none')};
   z-index: 2;
   opacity: 1;
+  @media (max-width: 320px) {
+    top: 0;
+    --modal-width: 320px;
+    padding: 0;
+    --modal-height: auto;
+  }
 `
 export const ModalExit = styled.div`
   position: absolute;
@@ -33,6 +38,9 @@ export const ModalExit = styled.div`
     background-image: url(${exit_hover});
   }
   cursor: pointer;
+  @media (max-width: 320px) {
+    display: none;
+  }
 `
 export const ModalFormArea = styled.form`
   display: flex;  
@@ -42,6 +50,9 @@ export const ModalFormArea = styled.form`
   flex-direction: column;
   align-items: start;
   background-color: #ffffff;
+  @media (max-width: 320px) {
+    width: 278px;
+  }
 }
 `
 export const ModalTitle = styled.div`
@@ -53,6 +64,10 @@ export const ModalTitle = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
+  @media (max-width: 320px) {
+    font-size: 24px;
+    line-height: 29px;
+  }
 `
 export const ModalLabel = styled.label`
   height: 30px;
@@ -63,6 +78,9 @@ export const ModalLabel = styled.label`
   display: flex;
   align-items: center;
   margin-bottom: 15px;
+  @media (max-width: 320px) {
+    display: none;
+  }
 `
 export const ModalTextarea = styled.textarea`
   height: 100px;
@@ -78,6 +96,16 @@ export const ModalTextarea = styled.textarea`
   line-height: 24px;
   &:focus {
     outline: 2px solid #d9d9d9;
+  }
+  @media (max-width: 320px) {
+    border-radius: 20px;
+    width: 278px;
+    font-size: 14px;
+    line-height: 21px;
+    margin-bottom: 10px;
+    &:focus {
+      outline: 1px solid #009ee4;
+    }
   }
 `
 export const ModalButton = styled.div`
@@ -109,6 +137,10 @@ export const ModalButton = styled.div`
     border: ${(props) =>
       props.disabled === true ? '1px solid #d9d9d9' : '1px solid #009ee4'};
   }
+  @media (max-width: 320px) {
+    width: 278px;
+    height: 47px;
+  }
 `
 export const ModalCommentsField = styled.div`
   display: flex;  
@@ -120,6 +152,9 @@ export const ModalCommentsField = styled.div`
   background-color: #ffffff;
   gap:5px;
   overflow-y:auto;
+  @media (max-width: 320px) {
+    width: 278px;   
+  }  
 }
 `
 export const ModalCommentContainer = styled.div`
@@ -129,6 +164,7 @@ export const ModalCommentContainer = styled.div`
   flex-direction: row;
   align-items: start;
   background-color: #ffffff;
+  flex-shrink:0;
 }
 `
 export const ModalAvatarField = styled.div`
@@ -166,34 +202,87 @@ export const ModalAuthor = styled.div`
   align-items: center;
   font-size:16px;
   font-weight:500;
+  @media (max-width: 320px) {
+    font-size:14px;
+    line-height:28px;
+  }  
 }
 `
 export const ModalDate = styled.span`
   font-weight: 400;
   color: #5f5f5f;
+  @media (max-width: 320px) {
+    font-size:14px;
+    line-height:28px;
+  }  
 `
 export const ModalText = styled.div`
   width: 600px;
   font-weight: 500;
   font-size: 16px;
+  line-height:32px;
   min-height: 32px;
   background-color: #ffffff;
   display: flex;
   align-items: center;
+  word-wrap:break-word;
+  @media (max-width: 320px) {
+    width: 230px;   
+  }  
 `
 export const ModalContent = styled.div`
   width: 600px;
   font-weight: 400;
   font-size: 16px;
+  line-height:24px;
   min-height: 48px;
   background-color: #ffffff;
   text-wrap: normal;
+  @media (max-width: 320px) {
+    width: 230px;   
+  }  
 `
 export const EmptyContainer = styled.div`
   width: 650px;
-  height: 510px;  
-  text-align:center;
-  padding-top:200px;
+  height: 510px;
+  text-align: center;
+  padding-top: 200px;
   font-weight: 500;
   font-size: 32px;
+  @media (max-width: 320px) {
+    width: 278px;   
+  }  
+`
+export const HeaderNav = styled.div`
+  display: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  @media (max-width: 320px) {
+    display: flex;
+    height: 55px;
+    justify-content: start;
+    padding-left: 17px;
+    background-color: #009ee4;
+    width: 320px;
+  }
+`
+export const SmallLogo = styled.img`
+  width: 32px;
+  height: 32px;
+  display: none;
+  @media (max-width: 320px) {
+    display: block;
+  }
+`
+export const ModalArrow = styled.img`
+  width: 9px;
+  height: 18px;
+  margin-right: 20px;
+  display: none;
+  @media (max-width: 320px) {
+    display: block;
+  }
 `

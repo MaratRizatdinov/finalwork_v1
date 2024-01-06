@@ -5,19 +5,19 @@ import circle from './circle.svg'
 import profile from './profile.svg'
 import { useNavigate, useLocation } from 'react-router-dom'
 
-export const Footer = ({setModal}) => {
+export const Footer = ({setModal, blocked}) => {
   const navigate=useNavigate()
   const path=useLocation().pathname
 
   const handleClickToHome=()=>{
-    navigate('/')
+    if(!blocked) navigate('/')
   } 
   const handleClickToProfile=()=>{
-    navigate('/profile/me')
+    if(!blocked)  navigate('/profile/me')
   }   
   const handleClickToAdd=()=>{
     if(path !=='/login' && path !=='/registration'){      
-      setModal('visible')
+      if(!blocked) setModal('visible')
     }
   }   
 
