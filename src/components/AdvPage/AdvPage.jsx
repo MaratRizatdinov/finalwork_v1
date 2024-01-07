@@ -59,7 +59,7 @@ export const AdvPage = () => {
                     `http://localhost:8090/${adv.images[mainUrl].url}`
                   }
                   alt=""
-                  onClick={() => {                    
+                  onClick={() => {
                     if (mainUrl == 4) {
                       setMainUrl(0)
                     } else setMainUrl((prev) => prev + 1)
@@ -89,6 +89,7 @@ export const AdvPage = () => {
                     style={{ width: '88px', height: '88px' }}
                   />
                 </S.AdvBarImg>
+
                 <S.AdvBarImg
                   id={1}
                   onClick={() => setMainUrl(1)}

@@ -97,7 +97,7 @@ export const AdvBar = styled.div`
   }
 `
 export const AdvBarImg = styled.div`
-  width: 90px;
+  width: 91px;
   min-width: 90px;
   height: 90px;
   background-color: #f0f0f0;
