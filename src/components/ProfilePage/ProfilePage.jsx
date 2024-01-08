@@ -117,7 +117,7 @@ export const ProfilePage = () => {
                   onFocus={() => setFocus('surname')}
                   placeholder="Введите фамилию"
                 />
-              </S.ProfileBlock>
+              </S.ProfileBlock>              
               <S.ProfileBlock>
                 <S.ProfileLabel htmlFor="city" focus={focus}>
                   Город

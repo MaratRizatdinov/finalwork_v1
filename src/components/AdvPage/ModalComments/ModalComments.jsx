@@ -14,18 +14,18 @@ export const ModalComments = ({ modal, setModal }) => {
   const [text, setText] = useState('')
   const navigate = useNavigate()
 
-  const advParam = useParams()
+  const {id} = useParams()
 
   const {
     data: comments,
     isLoading,
     refetch,
-  } = useGetAdvCommentsQuery(advParam.id)
+  } = useGetAdvCommentsQuery(id)
   const [addComment] = useAddCommentMutation()
 
   const handleClick = () => {
     const body = JSON.stringify({ text: text })
-    addComment({ id: advParam.id, body })
+    addComment({ id, body })
     setText('')
   }
 
